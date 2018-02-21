@@ -1,4 +1,3 @@
-
 var app = {
 
   //TODO: The current 'handleUsernameClick' function just toggles the class 'friend'
@@ -42,13 +41,13 @@ var app = {
     $.ajax({
       url: app.server,
       type: 'POST',
-      data: message,
+      data: JSON.stringify(message),
       success: function (data) {
         // Clear messages input
         app.$message.val('');
 
         // Trigger a fetch to update the messages, pass true to animate
-        app.fetch();
+        app.fetch(true);
       },
       error: function (error) {
         console.error('chatterbox: Failed to send message', error);
@@ -60,9 +59,12 @@ var app = {
     $.ajax({
       url: app.server,
       type: 'GET',
-      data: { order: '-createdAt' },
+      //data: { order: '-createdAt' },
       contentType: 'application/json',
       success: function(data) {
+        console.log(data)
+        app.renderMessages(data.results);
+
         // Don't bother if we have nothing to work with
         if (!data.results || !data.results.length) { return; }
 
@@ -85,6 +87,8 @@ var app = {
         }
       },
       error: function(error) {
+        console.log(app.server)
+
         console.error('chatterbox: Failed to fetch messages', error);
       }
     });

@@ -49,21 +49,32 @@ exports.requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  //headers['Content-Type'] = 'text/plain';
+    headers['Content-Type'] = 'application/json';
+
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
   //response.writeHead(statusCode, headers);
-  if (request.method === 'GET'){
+  if (request.method === 'GET' && request.url === '/classes/messages'){
     response.writeHead(200, headers);
     response.end(JSON.stringify(messages));
-  } else if (request.method === 'POST'){
-    request.on('data', (data) => {
-      messages.results.push(JSON.parse(data))
+  } else if (request.method === 'POST' && request.url === '/classes/messages'){
+    let body = [];
+    request.on('data', (chunk) => {
+      body.push(chunk);
+    }).on('end', () => {
+
+      body = Buffer.concat(body).toString();
+      //console.log("body:",body)
+      messages.results.push(JSON.parse(body));
     });
+      //messages.results.push(body);
+
+    console.log("message:", messages);
+
     response.writeHead(201, headers);
     response.end(JSON.stringify(messages));
-  } else if (request.method === 'OPTIONS'){
+  } else if (request.method === 'OPTIONS' && request.url === '/classes/messages'){
     response.writeHead(201, headers);
     response.end(JSON.stringify(null));
   }else{
