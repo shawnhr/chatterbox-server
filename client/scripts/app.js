@@ -14,7 +14,7 @@ var app = {
     app.username = window.location.search.substr(10);
 
     // Cache jQuery selectors
-    app.$message = $('#message');
+    app.$message = $('#text');
     app.$chats = $('#chats');
     app.$roomSelect = $('#roomSelect');
     app.$send = $('#send');
@@ -62,7 +62,7 @@ var app = {
       //data: { order: '-createdAt' },
       contentType: 'application/json',
       success: function(data) {
-        console.log(data)
+        console.log('fetch',data)
         app.renderMessages(data.results);
 
         // Don't bother if we have nothing to work with
@@ -99,6 +99,7 @@ var app = {
   },
 
   renderMessages: function(messages, animate) {
+    console.log('render',messages)
     // Clear existing messages`
     app.clearMessages();
     app.stopSpinner();
@@ -166,7 +167,7 @@ var app = {
     }
 
     var $message = $('<br><span/>');
-    $message.text(message.text).appendTo($chat);
+    $message.text(message.message).appendTo($chat);
 
     // Add the message to the UI
     app.$chats.append($chat);
@@ -218,7 +219,7 @@ var app = {
   handleSubmit: function(event) {
     var message = {
       username: app.username,
-      text: app.$message.val(),
+      message: app.$message.val(),
       roomname: app.roomname || 'lobby'
     };
 

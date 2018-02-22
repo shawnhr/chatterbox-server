@@ -57,17 +57,32 @@ exports.requestHandler = function(request, response) {
   //response.writeHead(statusCode, headers);
   if (request.method === 'GET' && request.url === '/classes/messages'){
     response.writeHead(200, headers);
+    //messages.results.push(request._postData)
+    console.log('get mess',messages);
     response.end(JSON.stringify(messages));
   } else if (request.method === 'POST' && request.url === '/classes/messages'){
-    let body = [];
-    request.on('data', (chunk) => {
-      body.push(chunk);
-    }).on('end', () => {
+    // let body = [];
+    // request.on('data', (chunk) => {
+    //   //console.log('chunk', chunk)
+    //   body.push(chunk);
+    // }).on('end', () => {
 
-      body = Buffer.concat(body).toString();
+    //   body = Buffer.concat(body).toString();
       //console.log("body:",body)
-      messages.results.push(JSON.parse(body));
+    //request.on('data', (data) =>{
+      //messages.result.push(JSON.parse(data));
+
+    request.on('data', (data) => {
+      messages.results.push(JSON.parse(data))
     });
+      // console.log('post',request._postData);
+      // messages.results.push(request._postData)
+    //})
+
+
+
+      //messages.results.push(JSON.parse(body));
+
       //messages.results.push(body);
 
     console.log("message:", messages);
